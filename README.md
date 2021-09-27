@@ -1,0 +1,1 @@
+assumed_rate_of__return
