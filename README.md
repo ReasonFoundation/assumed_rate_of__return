@@ -16,9 +16,9 @@ Run file `convert.sh` to convert these pdf files into text files.
 
 ### 2. Using regular expression to extract the information of interest and the context surrounding these figures.
 
-Run file carf1.py to extract all numbers associated with "investment rate of return", "discount rate".
+Run file `carf1.py` to extract all numbers associated with "investment rate of return", "discount rate".
 
-The result is `output.csv` file.
+The result is `output1.csv` file.
 
 ### 3. Comparing the extracted data against the rate in OPEB and Pension reports.
 
