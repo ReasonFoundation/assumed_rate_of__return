@@ -1,0 +1,8 @@
+"0","d %>% "
+"0","  drop_na(extracted_values) %>% "
+"0","  mutate(equal_pension = ifelse(pension_rate == extracted_values, 1, 0)) %>% "
+"0","  group_by(name) %>% "
+"0","  mutate(average = mean(equal_pension, na.rm = TRUE)) %>% "
+"0","  mutate(got_atleast_1 = ifelse(average > 0, 1, 0)) %>% "
+"0","  select(-c(equal_pension, average, opeb_rate)) %>% "
+"0","  unique() -> extracted_vs_pension"
