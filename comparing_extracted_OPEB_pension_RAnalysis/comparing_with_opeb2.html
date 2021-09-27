@@ -1726,7 +1726,7 @@ div.tocify {
 <div id="general-note" class="section level3">
 <h3>1. General note</h3>
 <ul>
-<li><p>Data extracted matches more than 99% of at least 1 of the values in either Actuarial Assumed Rate of Investment Return in “Pension Summary and UA”, Actuarial Assumed Rate of Investment Return and Discount Rate in “OPEB Summary and UA” report.</p></li>
+<li><p>Data extracted matches more than 99% of at least 1 of the values in either Actuarial Assumed Rate of Investment Return in “Pension Summary and UA”, Actuarial Assumed Rate of Investment Return and Discoun t Rate in “OPEB Summary and UA” report.</p></li>
 <li><p>Among the 6 cases without matches, 4 are very likely due to wrong entry in Pension and OPEB, i.e. reported figures are not actually in the pdf files.</p></li>
 <li><p>Pair-wise comparison: Data extracted matches about 88% the Actuarial Assumed Rate of Investment Return in “Pension Summary and UA” report, and about 92% that of “OPEB Summary and UA” report.</p></li>
 </ul>
@@ -1843,28 +1843,25 @@ head(d)</code></pre>
   mutate(average_anymatch = mean(equal_any, na.rm = TRUE)) %&gt;% 
   mutate(got_atleast_1inall = ifelse(average_anymatch &gt; 0, 1, 0)) %&gt;% 
   filter(got_atleast_1inall == 0) %&gt;% 
-  select(-c(search_terms, context)) %&gt;% unique()</code></pre>
-<pre><code>## # A tibble: 16 x 8
+  select(-c(equal_any, average_anymatch, got_atleast_1inall)) %&gt;% unique() -&gt; not_matched_with_any
+
+not_matched_with_any</code></pre>
+<pre><code>## # A tibble: 25 x 7
 ## # Groups:   name [6]
-##    name       extracted_values pension_rate opeb_rate discount_rate_o… equal_any
-##    &lt;chr&gt;      &lt;chr&gt;            &lt;chr&gt;        &lt;chr&gt;                &lt;dbl&gt;     &lt;dbl&gt;
-##  1 Ann Arbor  7                6.9          6.9                   6.9          0
-##  2 Ann Arbor  8                6.9          6.9                   6.9          0
-##  3 Marysville 7.5              7            7                     7            0
-##  4 Marysville 8.5              7            7                     7            0
-##  5 Hamtramck  6.6              7.35         3.5                   3.5          0
-##  6 Hamtramck  3.13             7.35         3.5                   3.5          0
-##  7 Hamtramck  3.56             7.35         3.5                   3.5          0
-##  8 Crawford … 7.6              7.35         2.66                  2.66         0
-##  9 Crawford … 6.6              7.35         2.66                  2.66         0
-## 10 White Lak… 7.6              7.35         7                     3            0
-## 11 White Lak… 8                7.35         7                     3            0
-## 12 White Lak… 7.75             7.35         7                     3            0
-## 13 Fenton     7.75             7.35         3.5                   3.5          0
-## 14 Fenton     8                7.35         3.5                   3.5          0
-## 15 Fenton     4                7.35         3.5                   3.5          0
-## 16 Fenton     2.45             7.35         3.5                   3.5          0
-## # … with 2 more variables: average_anymatch &lt;dbl&gt;, got_atleast_1inall &lt;dbl&gt;</code></pre>
+##    name   context          search_terms  extracted_values pension_rate opeb_rate
+##    &lt;chr&gt;  &lt;chr&gt;            &lt;chr&gt;         &lt;chr&gt;            &lt;chr&gt;        &lt;chr&gt;    
+##  1 Ann A… sensitivity of … discount rate 7                6.9          6.9      
+##  2 Ann A… the following p… discount rate 8                6.9          6.9      
+##  3 Marys… mortality rates… discount rate 7.5              7            7        
+##  4 Marys… 1.50 sensitivit… discount rate 7.5              7            7        
+##  5 Marys… sensitivity of … discount rate 8.5              7            7        
+##  6 Marys… actuarial assum… investment r… 7.5              7            7        
+##  7 Marys… note 10 - poste… discount rate 7.5              7            7        
+##  8 Hamtr… following prese… discount rate 6.6              7.35         3.5      
+##  9 Hamtr… because no load… discount rate 3.13             7.35         3.5      
+## 10 Hamtr… 3.5 to 14.5% in… net of opeb … 3.56             7.35         3.5      
+## # … with 15 more rows, and 1 more variable: discount_rate_opeb &lt;dbl&gt;</code></pre>
+<pre class="r"><code>write_xlsx(not_matched_with_any,&quot;not_matched_with_any.xlsx&quot;)</code></pre>
 <p><em>Manual checking suggests that the values reported in opeb or pension are not found in the files:</em></p>
 <p>Ann Arbor: can’t find 6.9 in pdf file</p>
 <p>Marysville: can’t find 7.00 in pdf file</p>
@@ -1907,24 +1904,26 @@ head(d)</code></pre>
 <li>Did not capture a value that matches Pension</li>
 </ul>
 <pre class="r"><code>extracted_vs_pension %&gt;% 
-  select(-context) %&gt;% 
-  drop_na(extracted_values) %&gt;% 
-  filter(got_atleast_1 == 0)</code></pre>
+  filter(got_atleast_1 == 0) %&gt;% 
+  select(-got_atleast_1) -&gt; not_matched_with_pension
+
+not_matched_with_pension</code></pre>
 <pre><code>## # A tibble: 316 x 6
 ## # Groups:   name [47]
-##    name       search_terms  extracted_values pension_rate discount_rate_opeb
-##    &lt;chr&gt;      &lt;chr&gt;         &lt;chr&gt;            &lt;chr&gt;                     &lt;dbl&gt;
-##  1 South Lyon discount rate 2.66             7.35                       2.66
-##  2 South Lyon discount rate 3.51             7.35                       2.66
-##  3 South Lyon discount rate 3.51             7.35                       2.66
-##  4 South Lyon discount rate 2.66             7.35                       2.66
-##  5 South Lyon discount rate 7.6              7.35                       2.66
-##  6 South Lyon discount rate 8                7.35                       2.66
-##  7 South Lyon discount rate 7.6              7.35                       2.66
-##  8 South Lyon discount rate 8                7.35                       2.66
-##  9 South Lyon discount rate 7.6              7.35                       2.66
-## 10 South Lyon discount rate 3.87             7.35                       2.66
-## # … with 306 more rows, and 1 more variable: got_atleast_1 &lt;dbl&gt;</code></pre>
+##    name   context    search_terms extracted_values pension_rate discount_rate_o…
+##    &lt;chr&gt;  &lt;chr&gt;      &lt;chr&gt;        &lt;chr&gt;            &lt;chr&gt;                   &lt;dbl&gt;
+##  1 South… measureme… discount ra… 2.66             7.35                     2.66
+##  2 South… discount … discount ra… 3.51             7.35                     2.66
+##  3 South… 750,860 a… discount ra… 3.51             7.35                     2.66
+##  4 South… assumptio… discount ra… 2.66             7.35                     2.66
+##  5 South… study con… discount ra… 7.6              7.35                     2.66
+##  6 South… contribut… discount ra… 8                7.35                     2.66
+##  7 South… assumptio… discount ra… 7.6              7.35                     2.66
+##  8 South… pension i… discount ra… 8                7.35                     2.66
+##  9 South… changes i… discount ra… 7.6              7.35                     2.66
+## 10 South… opeb info… discount ra… 3.87             7.35                     2.66
+## # … with 306 more rows</code></pre>
+<pre class="r"><code>write_xlsx(not_matched_with_pension, &quot;not_matched_with_pension.xlsx&quot;)</code></pre>
 </div>
 <div id="comparison-iii-data-extracted-vs.opeb" class="section level3">
 <h3>7. Comparison III: Data extracted vs. OPEB</h3>
@@ -1962,23 +1961,26 @@ head(d)</code></pre>
 <li>Did not capture a value that matches OPEB</li>
 </ul>
 <pre class="r"><code>extracted_vs_opeb %&gt;% 
-  select(-context) %&gt;% 
-  filter(got_atleast_1 == 0)</code></pre>
+  filter(got_atleast_1 == 0) %&gt;% 
+  select(-c(got_atleast_1)) -&gt; not_matched_with_opeb
+
+not_matched_with_opeb</code></pre>
 <pre><code>## # A tibble: 179 x 6
 ## # Groups:   name [31]
-##    name   search_terms extracted_values opeb_rate discount_rate_o… got_atleast_1
-##    &lt;chr&gt;  &lt;chr&gt;        &lt;chr&gt;            &lt;chr&gt;                &lt;dbl&gt;         &lt;dbl&gt;
-##  1 Bay C… net of inve… 7.35             7                     7                0
-##  2 Bay C… investment … 7.35             7                     7                0
-##  3 Bay C… discount ra… 7.6              7                     7                0
-##  4 Bay C… discount ra… 5.62             7                     7                0
-##  5 Bay C… discount ra… 8                7                     7                0
-##  6 Bay C… net of pens… 7.35             7                     7                0
-##  7 Bay C… net of inve… 7.5              7                     7                0
-##  8 West … net of inve… 7.35             4.25                  4.25             0
-##  9 West … investment … 7.35             4.25                  4.25             0
-## 10 West … discount ra… 7.6              4.25                  4.25             0
+##    name   context      search_terms  extracted_values opeb_rate discount_rate_o…
+##    &lt;chr&gt;  &lt;chr&gt;        &lt;chr&gt;         &lt;chr&gt;            &lt;chr&gt;                &lt;dbl&gt;
+##  1 Bay C… actuarial a… net of inves… 7.35             7                     7   
+##  2 Bay C… actuarial a… investment r… 7.35             7                     7   
+##  3 Bay C… sensitivity… discount rate 7.6              7                     7   
+##  4 Bay C… sensitivity… discount rate 5.62             7                     7   
+##  5 Bay C… the followi… discount rate 8                7                     7   
+##  6 Bay C… 3.00% inves… net of pensi… 7.35             7                     7   
+##  7 Bay C… 3.50% - 26.… net of inves… 7.5              7                     7   
+##  8 West … salary incr… net of inves… 7.35             4.25                  4.25
+##  9 West … salary incr… investment r… 7.35             4.25                  4.25
+## 10 West … 4.85% disco… discount rate 7.6              4.25                  4.25
 ## # … with 169 more rows</code></pre>
+<pre class="r"><code>write_xlsx(not_matched_with_opeb, &quot;not_matched_with_opeb.xlsx&quot;)</code></pre>
 <p>Some random checking against PDF files shows that these OPEB data points are not correct.</p>
 <pre class="r"><code>display_context &lt;- function(cityname) {
   df &lt;- d %&gt;% select(name, context, extracted_values, opeb_rate) %&gt;% 

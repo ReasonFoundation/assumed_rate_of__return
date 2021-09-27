@@ -12,10 +12,12 @@ library(dplyr)
 library(stringr)
 library(tidyr)
 library(knitr)
+library(writexl)
 ```
 ### 1. General note
 
-* Data extracted matches more than 99% of at least 1 of the values in either Actuarial Assumed Rate of Investment Return in "Pension Summary and UA", Actuarial Assumed Rate of Investment Return and Discount Rate in "OPEB Summary and UA" report. 
+* Data extracted matches more than 99% of at least 1 of the values in either Actuarial Assumed Rate of Investment Return in "Pension Summary and UA", Actuarial Assumed Rate of Investment Return and Discoun
+t Rate in "OPEB Summary and UA" report. 
 
 * Among the 6 cases without matches, 4 are very likely due to wrong entry in Pension and OPEB, i.e. reported figures are not actually in the pdf files.   
 
@@ -110,8 +112,10 @@ d %>%
   mutate(average_anymatch = mean(equal_any, na.rm = TRUE)) %>% 
   mutate(got_atleast_1inall = ifelse(average_anymatch > 0, 1, 0)) %>% 
   filter(got_atleast_1inall == 0) %>% 
-  select(-c(search_terms, context)) %>% unique()
+  select(-c(equal_any, average_anymatch, got_atleast_1inall)) %>% unique() -> not_matched_with_any
 
+not_matched_with_any
+write_xlsx(not_matched_with_any,"not_matched_with_any.xlsx")
 
 ```
 
@@ -154,9 +158,11 @@ extracted_vs_pension %>%
 
 ```{r}
 extracted_vs_pension %>% 
-  select(-context) %>% 
-  drop_na(extracted_values) %>% 
-  filter(got_atleast_1 == 0)
+  filter(got_atleast_1 == 0) %>% 
+  select(-got_atleast_1) -> not_matched_with_pension
+
+not_matched_with_pension
+write_xlsx(not_matched_with_pension, "not_matched_with_pension.xlsx")
 ```
 
 
@@ -187,8 +193,11 @@ extracted_vs_opeb %>%
 
 ```{r}
 extracted_vs_opeb %>% 
-  select(-context) %>% 
-  filter(got_atleast_1 == 0)
+  filter(got_atleast_1 == 0) %>% 
+  select(-c(got_atleast_1)) -> not_matched_with_opeb
+
+not_matched_with_opeb
+write_xlsx(not_matched_with_opeb, "not_matched_with_opeb.xlsx")
 ```
 
 Some random checking against PDF files shows that these OPEB data points are not correct. 
@@ -236,6 +245,7 @@ Eg4. Manistee has value of 7.60, OPEB: 0.00
 ```{r}
 
 display_context("Manistee")
+
 ```
 
 
