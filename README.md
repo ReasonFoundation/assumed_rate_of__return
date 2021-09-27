@@ -29,4 +29,5 @@ Using `output1.csv` file above to compare against Actuarial Assumed Rate of Inve
 Run `comparing_with_opeb2.Rmd` inside folder "comparing_extracted_OPEB_pension_RAnalysis". Knitting the file to get final comparison report: `comparing_with_opeb2.html`.
 
 List of discrepancies between extracted data and both OPEB and Pension: `not_matched_with_any`
+
 List of pairwise discrepancies between extracted data and OPEB: `not_matched_with_opeb` ; between extracted data and Pension: `not_matched_with_pension`
