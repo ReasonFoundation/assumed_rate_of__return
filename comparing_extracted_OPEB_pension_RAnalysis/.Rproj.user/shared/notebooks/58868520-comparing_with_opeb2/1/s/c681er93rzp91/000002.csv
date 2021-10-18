@@ -1,3 +1,0 @@
-"0","d %>% "
-"0","  mutate(opeb_equal_pension = ifelse(pension_rate == opeb_rate, 1, 0)) %>% "
-"0","  filter(opeb_equal_pension == 0)"

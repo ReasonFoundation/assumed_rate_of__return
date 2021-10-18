@@ -1,8 +1,0 @@
-"0","pension <- rio::import(here::here(""data"", ""Michigan Pension and OPEB Assumption Data 2020.xlsx""), skip = 5, sheet = ""Pension Summary and UA"") %>% "
-"0","  rename(""pension_rate"" = `Actuarial Assumed Rate of Investment Return`,"
-"0","         ""name"" = `Local Government Name`) %>%"
-"0","  select(name, pension_rate) %>% "
-"0","  mutate(pension_rate = pension_rate * 100) %>% "
-"0","  mutate(name = str_replace_all(name, ""City Of "", """"))"
-"0",""
-"0","head(pension)"
