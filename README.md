@@ -18,7 +18,7 @@ Run file `convert.sh` to convert these pdf files into text files.
 
 Run file `carf1.py` to extract all numbers associated with "investment rate of return", "discount rate".
 
-The result is `output1.csv` file.
+The extracted result is `output1.csv` file.
 
 ### 3. Comparing the extracted data against the rate in OPEB and Pension reports.
 
@@ -26,6 +26,8 @@ This analysis is run in `R`.
 
 Using `output1.csv` file above to compare against Actuarial Assumed Rate of Investment Return and Discount rate in "Michigan Pension and OPEB Assumption Data 2020.xlsx".
 
-Run `comparing_with_opeb2.Rmd` inside folder "comparing_extracted_OPEB_pension_RAnalysis".
+Run `comparing_with_opeb2.Rmd` inside folder "comparing_extracted_OPEB_pension_RAnalysis". Knitting the file to get final comparison report: `comparing_with_opeb2.html`.
 
-The final result is output to `comparing_with_opeb2.html`.
+List of discrepancies between extracted data and both OPEB and Pension: `not_matched_with_any`
+
+List of pairwise discrepancies between extracted data and OPEB: `not_matched_with_opeb` ; between extracted data and Pension: `not_matched_with_pension`
